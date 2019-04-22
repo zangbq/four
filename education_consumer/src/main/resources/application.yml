@@ -1,0 +1,34 @@
+server:
+  port: 8010
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8888/eureka/
+spring:
+  data:
+    elasticsearch:
+      repositories:
+        enabled: true
+      #集群节点名称 ip
+      cluster-nodes: localhost:9300
+      #名称
+      cluster-name: elasticsearch
+  application:
+    name: service-feign
+feign:
+  hystrix:
+    enabled: false
+  rabbitmq:
+    host: 192.168.101.115
+    port: 5672
+    username: guest
+    password: guest
+  redis:
+    host: localhost
+    port: 6379
+    jedis:
+      pool:
+        max-idle: 300
+        max-active: 600
+        max-wait: 300
+  thymeleaf: content-type=text/html

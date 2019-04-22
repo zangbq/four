@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/jdbc">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-select/js/bootstrap-select.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/js/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <!-- bootstrop-table -->
+    <script type="text/javascript" src="/js/bootstrap-table/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <link rel="stylesheet" href="/js/bootstrap-table/bootstrap-table.css">
+    <!-- bootstrop-bootbox -->
+    <script src="/js/bootstrap-bootbox/bootbox.js"></script>
+    <!-- bootstrap-datetimepicker -->
+    <script type="text/javascript" src="/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <link rel="stylesheet" href="/js/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css">
+    <link rel="stylesheet" href="/js/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
+    <script src="/js/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"
+            type="text/javascript"></script>
+</head>
+<body>
+<br>
+<!--订单状态为已完成即可申请提现 <button class="btn btn-success btn-sm" id="addbtn" >立即绑卡</button>-->
+<a href="/shopping/showShopping">购物车</a>
+<table id="myTable"></table>
+<div data-options="region:'west'" style="width:1000px;">
+    <div id="toolbar">
+        <form class="form-inline"  role="addForm">
+            <div class="form-group">
+                <label for="shoppingName">商品名称</label>
+                <input type="text" class="form-control" id="shoppingName" placeholder="请输入商品名">
+            </div>
+            <div class="form-group">
+                <input value="搜索" type="button" onclick="searchUser()" class="btn btn-info glyphicon glyphicon-search">
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:inline="none">
+    /*$(function(){
+        initUserTable();
+    })
+    function initUserTable(){
+        $("#myTable").bootstrapTable({
+            url:"/shopping/findShopping",//获取数据地址
+            toolbar: "#toolbar",
+            fit:true,
+           /!* queryParams:function(){
+                return {
+
+                    commodityName:$("#name").val(),
+                    orderId:$("#ord").val(),
+                    sourcingCompany:$("#scy").val(),
+                    settlementStatus:$("#sts").val()
+
+                }
+            },*!/
+            // pagination:true, //是否展示分页
+            // pageList:[5, 10, 20, 50],//分页组件
+            // pageNumber:1,
+            // pageSize:5,//默认每页条数
+            // sidePagination:'server',//分页方式：client客户端分页，server服务端分页
+            columns:[
+                {field:"id",title:"id"},
+                {field:"shoppingName",title:"shoppingName"},
+                {field:"shoppingSpecification",title:"规格"},
+                {field:"shoppingPrice",title:"shoppingPrice"},
+                {field:"shoppingCount",title:"shoppingCount"},
+                {field:"ww",title:"操作",formatter:function (value,row,index) {
+                        return  "<a href='javascript:saveShopping("+row.id+")'>加入购物车</a>";
+                    }}
+               ]
+        })
+    }
+    function saveShopping(id) {
+        $.ajax({
+            url:"/shopping/findByShoppingId",
+            data:{id:id},
+            success:function (data) {
+                alert("新增购物车成功")
+            }
+        })
+    }
+
+    //条件查询
+  /!*  function   searchUser(){
+
+
+        var a = $("#commodityName").val()
+        alert(a)
+
+        $("#myTable").bootstrapTable("load",{
+            // commodityName:document.getElementById("commodityName").value,
+            commodityName:$("#commodityName").val(),
+            orderId:$("#orderId").val(),
+            sourcingCompany:$("#sourcingCompany").val(),
+
+        })
+    }*!/
+
+    function searchUser(){
+        $('#myTable').bootstrapTable('refresh');//刷新表格
+    }
+
+
+  /!*  //打开弹框
+    $("#addbtn").click(function () {
+        $('#addForm')[0].reset();//打开弹框时清楚表单
+        $("#myModalLabel").text("绑卡设置");
+        $('#myModal').modal();
+
+    });*!/
+
+    function add(){
+        alert("=====================================sadasd")
+        $.ajax({
+            url:"/find/findUser",
+            data:$("#addForm").serialize(),
+            success:function(data){
+           //     $('#myModal').modal('hide');
+           //     $('#myTable').bootstrapTable('refresh');
+            }
+        })
+    }
+*/
+
+</script>
+</html>

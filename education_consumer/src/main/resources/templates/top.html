@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-select/js/bootstrap-select.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/js/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <!-- bootstrop-table -->
+    <script type="text/javascript" src="/js/bootstrap-table/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <link rel="stylesheet" href="/js/bootstrap-table/bootstrap-table.css">
+    <!-- bootstrop-bootbox -->
+    <script src="/js/bootstrap-bootbox/bootbox.js"></script>
+    <!-- bootstrap-datetimepicker -->
+    <script type="text/javascript" src="/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <link rel="stylesheet" href="/js/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css">
+    <link rel="stylesheet" href="/js/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
+    <script src="/js/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"
+            type="text/javascript"></script>
+</head>
+<body>
+<div  id="video"></div>
+<form action="" class="navbar-form navbar-right">
+    <input type="text" id="key" placeholder="搜索" class="form-control"/>
+</form>
+<button id="oninit" onclick="initMyTableDrugs()">搜索</button>
+</body>
+<script>
+    $(function () {
+        initMyTableDrugs(1,8);
+    })
+
+    $("#oninit").click(function(){
+        elasticSearchVideo(1,10)
+    })
+
+    function initMyTableDrugs(page,rows) {
+        var courseName = $("#key").val();
+        $.ajax({
+            url:'/findEs/queryVideo',
+            type:'GET',
+            data:{
+                page:page,
+                rows:rows,
+                courseName:courseName,
+            },
+            success:function(result){
+                var data = result.rows
+                var html="<div class=\"row\"></div>";
+                for(var i =0;i< data.length;i++){
+                    html+="<div class=\"col-sm-6 col-md-3\"><ul>"+
+                        "<li><img style='width:170px;height:180px' src='"+data[i].courseImg+"'><br>"+
+                        "<span  style='color:#ff779d;font-size:22px'>￥"+data[i].coursePrice+"</span><br>"+
+                        "<span>人数:"+data[i].courseHour+"</span><br>"+
+                        "<span>分数:"+data[i].courseGrade+"</span><br>"+
+                        "<span style='width:170px'>"+data[i].courseName+"</span><br/>" +
+                        "</span></li>"+
+                        "</ul></div>";
+                }
+                $("#video").html(html)
+              /*  var total = result.total
+                var pageSize = Math.ceil(total/rows)
+                $(".zxf_pagediv").createPage({
+                    pageNum:pageSize,
+                    backfun: function(e){
+                        page = e.current//回调
+                        rows = 8;
+                        elasticSearch2(page,rows)
+                    }
+                })*/
+            }
+
+
+        })
+    }
+</script>
+</html>
