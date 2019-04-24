@@ -1,18 +1,27 @@
 package com.jk.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jk.model.VideoBean;
 import com.jk.serviceapi.CurriculumServiceApl;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import redis.clients.jedis.Jedis;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 页面升序降序
+ */
 @RestController
 @RequestMapping("curriculum")
 public class CurriculumController {
@@ -26,39 +35,81 @@ public class CurriculumController {
     @Autowired
     private CurriculumServiceApl curriculumServiceApl;
 
-    private Jedis jedis = null;
 
-    @RequestMapping("findRedisVideo")
+    @Scheduled(fixedRate = 20000)//定时器注解
     @ResponseBody
     public void findRedisVideo() {
 
         List<VideoBean> videoBeanList = curriculumServiceApl.findVideo();
 
-        if (redisTemplate.opsForValue().getAndSet("videoBeanList",videoBeanList)!=null){
+       Collections.sort(videoBeanList, new Comparator<VideoBean>(){
+                     /*
+28              * int compare(Student o1, Student o2) 返回一个基本类型的整型，
+29              * 返回负数表示：o1 小于o2，
+30              * 返回0 表示：o1和o2相等，
+31              * 返回正数表示：o1大于o2。
+32              */
+                     public int compare(VideoBean o1, VideoBean o2) {
+                             if(Integer.parseInt(o1.getCoursePrice()) > Integer.parseInt(o2.getCoursePrice())){
+                                     return 1;
+                                 }
+                             if(Integer.parseInt(o1.getCoursePrice()) > Integer.parseInt(o2.getCoursePrice())){
+                                     return 0;
+                                 }
+                             return -1;
+                         }
+                 });
+        redisTemplate.opsForValue().set("findRedisVideo_key",videoBeanList);
+     }
 
-            redisTemplate.opsForValue().set("videoBeanList",videoBeanList);
 
-        }
-        for (VideoBean videoBean : videoBeanList) {
-            //jedis.append("videoBeanList", videoBean.getCourseId());
-           // redisTemplate.opsForValue().append("videoBeanList", videoBean.getCourseId());
-        }
-        videoBeanList.stream().map(VideoBean::getCourseId).map((l) -> String.valueOf(l)).collect(Collectors.toList());
+     @ResponseBody
+    @RequestMapping("getKey")
+    public JSONObject getKey(){
+         List<VideoBean> videoBeanList = new ArrayList<VideoBean>();
+         JSONObject result = new JSONObject();
+         List<VideoBean> videoKey = (List<VideoBean>)redisTemplate.opsForValue().get("findRedisVideo_key");
+         result.put("rows",videoKey);
+         return result;
+     }
 
-      //  System.out.println("=========="+jedis.lpush("videoBeanList", videoBeanList.toArray(new String[videoBeanList.size()])) );
+     /*--------------------------------降序-----------------------------------------------------*/
 
-        System.out.println(redisTemplate.opsForValue().getAndSet("videoBeanList",videoBeanList));
-
-    }
-
-    @RequestMapping("getRedisSize")
+    @Scheduled(fixedRate = 20000)//定时器注解
     @ResponseBody
-    public void getRedisSize(){
-        List<String> strs = jedis.lrange("videoBeanList", 0, -1);
-        for(String str:strs){
-            System.out.println(str);
-        }
+    public void findVideo() {
+
+        List<VideoBean> videoBeanList = curriculumServiceApl.findVideo();
+
+        Collections.sort(videoBeanList, new Comparator<VideoBean>(){
+            /*
+28              * int compare(Student o1, Student o2) 返回一个基本类型的整型，
+29              * 返回负数表示：o1 小于o2，
+30              * 返回0 表示：o1和o2相等，
+31              * 返回正数表示：o1大于o2。
+32              */
+            public int compare(VideoBean o1, VideoBean o2) {
+                if(Integer.parseInt(o1.getCoursePrice()) < Integer.parseInt(o2.getCoursePrice())){
+                    return 1;
+                }
+                if(Integer.parseInt(o1.getCoursePrice()) == Integer.parseInt(o2.getCoursePrice())){
+                    return 0;
+                }
+                return -1;
+            }
+        });
+        redisTemplate.opsForValue().set("findRedisVideo_key_One",videoBeanList);
     }
 
+
+    @ResponseBody
+    @RequestMapping("findKey")
+    public JSONObject findKey(){
+        List<VideoBean> videoBeanList = new ArrayList<VideoBean>();
+        JSONObject result = new JSONObject();
+        List<VideoBean> videoKey = (List<VideoBean>)redisTemplate.opsForValue().get("findRedisVideo_key_One");
+        result.put("rows",videoKey);
+        return result;
+    }
 
 }

@@ -105,4 +105,23 @@ public class EsController {
     }
 
 
+    /**
+     * 详情查询
+     * @param id
+     * @return
+     */
+    @RequestMapping("queryOrder")
+    @ResponseBody
+    public VideoBean queryOrder(Integer courseId){
+        Client client = elasticsearchTemplate.getClient();
+        SearchRequestBuilder searchRequestBuilder = client.prepareSearch("ordeo").setTypes("orvideo").setQuery(QueryBuilders.matchQuery("courseId",courseId));
+        SearchResponse searchResponse = searchRequestBuilder.get();
+        SearchHits hits = searchResponse.getHits();
+        Iterator<SearchHit> iterator = hits.iterator();
+        SearchHit next = iterator.next();
+        String sourceAsString = next.getSourceAsString();
+        VideoBean housBean1 = JSON.parseObject(sourceAsString, VideoBean.class);
+        return housBean1;
+    }
+
 }

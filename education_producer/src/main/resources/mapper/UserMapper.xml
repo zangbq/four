@@ -22,4 +22,10 @@
         select * from video
 
     </select>
+
+    <select id="findByShoppingId" resultType="com.jk.model.VideoBean">
+
+        select * from video where courseId = ${id}
+
+    </select>
 </mapper>

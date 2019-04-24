@@ -27,4 +27,10 @@ public class FrontpageController {
         return "top";
     }
 
+
+    @RequestMapping("oneCenter")
+    public String oneCenter(){
+        return "oneCenter";
+    }
+
 }

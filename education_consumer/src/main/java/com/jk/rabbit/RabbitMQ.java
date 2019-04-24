@@ -4,18 +4,18 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//@Configuration
+@Configuration
 public class RabbitMQ {
 
-  /*  @Bean
+    @Bean
     public Queue messageQueue2(){
-        return new Queue("saveShopping");
+        return new Queue("videoMongoUserShopping_Id");
     }
 
     @Bean
     public Queue messageQueue1(){
-        return new Queue("shopping");
-    }*/
+        return new Queue("findByShoppingId_Info");
+    }
 
 }
 

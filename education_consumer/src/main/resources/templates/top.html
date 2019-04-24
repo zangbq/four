@@ -21,19 +21,27 @@
             type="text/javascript"></script>
 </head>
 <body>
-<div  id="video"></div>
 <form action="" class="navbar-form navbar-right">
     <input type="text" id="key" placeholder="搜索" class="form-control"/>
-</form>
+</form><br>
 <button id="oninit" onclick="initMyTableDrugs()">搜索</button>
+<button id="initMyTable" onclick="initMyTable()">升序</button>
+<button id="init" onclick="initMy()">降序</button><br>
+<div  id="video"></div>
+
+
 </body>
 <script>
     $(function () {
         initMyTableDrugs(1,8);
     })
 
-    $("#oninit").click(function(){
-        elasticSearchVideo(1,10)
+    $("#init").click(function(){
+        initMyTable()
+    })
+
+    $("#initMyTable").click(function(){
+        initMy()
     })
 
     function initMyTableDrugs(page,rows) {
@@ -51,6 +59,34 @@
                 var html="<div class=\"row\"></div>";
                 for(var i =0;i< data.length;i++){
                     html+="<div class=\"col-sm-6 col-md-3\"><ul>"+
+                        "<li><a href='javascript:junmpspxq(\""+data[i].courseId+"\")'><img style='width:170px;height:180px' src='"+data[i].courseImg+"'></a><br>"+
+                        "<span  style='color:#ff779d;font-size:22px'>￥"+data[i].coursePrice+"</span><br>"+
+                        "<span>人数:"+data[i].courseHour+"</span><br>"+
+                        "<span>分数:"+data[i].courseGrade+"</span><br>"+
+                        "<span style='width:170px'>"+data[i].courseName+"</span><br/>" +
+                        "</span></li>"+
+                        "</ul></div>";
+                }
+                $("#video").html(html)
+            }
+        })
+    }
+    function junmpspxq(courseId) {
+        alert(courseId)
+        location.href="/frontpage/oneCenter?courseId="+courseId;
+    }
+    <!-- 升序 ================================================================-->
+    function initMyTable() {
+        $.ajax({
+            url:'/curriculum/getKey',
+            type:'GET',
+            data:{
+            },
+            success:function(result){
+                var data = result.rows
+                var html="<div class=\"row\"></div>";
+                for(var i =0;i< data.length;i++){
+                    html+="<div class=\"col-sm-6 col-md-3\"><ul>"+
                         "<li><img style='width:170px;height:180px' src='"+data[i].courseImg+"'><br>"+
                         "<span  style='color:#ff779d;font-size:22px'>￥"+data[i].coursePrice+"</span><br>"+
                         "<span>人数:"+data[i].courseHour+"</span><br>"+
@@ -60,19 +96,32 @@
                         "</ul></div>";
                 }
                 $("#video").html(html)
-              /*  var total = result.total
-                var pageSize = Math.ceil(total/rows)
-                $(".zxf_pagediv").createPage({
-                    pageNum:pageSize,
-                    backfun: function(e){
-                        page = e.current//回调
-                        rows = 8;
-                        elasticSearch2(page,rows)
-                    }
-                })*/
             }
+        })
+    }
 
-
+    <!--降序 ================================================================-->
+    function initMy() {
+        $.ajax({
+            url:'/curriculum/findKey',
+            type:'GET',
+            data:{
+            },
+            success:function(result){
+                var data = result.rows
+                var html="<div class=\"row\"></div>";
+                for(var i =0;i< data.length;i++){
+                    html+="<div class=\"col-sm-6 col-md-3\"><ul>"+
+                        "<li><img style='width:170px;height:180px' src='"+data[i].courseImg+"'><br>"+
+                        "<span  style='color:#ff779d;font-size:22px'>￥"+data[i].coursePrice+"</span><br>"+
+                        "<span>人数:"+data[i].courseHour+"</span><br>"+
+                        "<span>分数:"+data[i].courseGrade+"</span><br>"+
+                        "<span style='width:170px'>"+data[i].courseName+"</span><br/>" +
+                        "</span></li>"+
+                        "</ul></div>";
+                }
+                $("#video").html(html)
+            }
         })
     }
 </script>
